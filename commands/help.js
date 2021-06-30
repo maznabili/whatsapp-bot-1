@@ -1,10 +1,10 @@
-const { readdir } = require("fs");
 const { prefix } = require("../config.json");
+const { readdir } = require("fs");
 
 exports.run = (bot, message, args) => {
     const tmpFile = {};
     readdir("./commands/", (e, files) => {
-        if (e) console.error(e);
+        if (e) return console.error(e);
         files.forEach(jsFile => {
             const cmdFile = require(`./${jsFile}`);
             tmpFile[jsFile.replace(".js", "")] = {};
@@ -15,11 +15,11 @@ exports.run = (bot, message, args) => {
 
         // eslint-disable-next-line no-negated-condition
         if (!args[0]) {
-            bot.sendText(message.from, `*Available commands:* ${Object.keys(tmpFile).join(", ")}\n\n_You can run *help <command name>* to show advanced help._`);
+            bot.reply(message.from, `*Available commands:* ${Object.keys(tmpFile).join(", ")}\n\n_You can run *help <command name>* to show advanced help._`, message.id);
         } else {
             const commandName = args[0];
             const { name, description, usage } = require(`./${commandName}.js`).help;
-            bot.sendText(message.from, `*${name}*\n\nDescription: ${description}\nUsage: \`\`\`${usage}\`\`\``);
+            return bot.reply(message.from, `*${name}*\n\nDescription: ${description}\nUsage: \`\`\`${usage}\`\`\``, message.id);
         }
     });
 };

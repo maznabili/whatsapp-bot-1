@@ -1,10 +1,10 @@
-const { evaluate } = require("mathjs");
 const { prefix } = require("../config.json");
+const { evaluate } = require("mathjs");
 
 exports.run = async (bot, message, args) => {
     const expressions = args.join(" ");
     const answer = evaluate(expressions);
-    bot.sendText(message.from, answer.toString());
+    return bot.reply(message.from, answer.toString(), message.id);
 };
 
 exports.help = {
